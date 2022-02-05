@@ -15,7 +15,7 @@ const contractAddress = getContractAddress();
 const useContractInfo = (): ContractInfo => {
     const [contractInfo, setContractInfo] = useState<ContractInfo>({
         claimPeriodEnds: undefined,
-        merkleRoot: undefined
+        merkleRoot: undefined,
     });
 
     const provider = useProvider();

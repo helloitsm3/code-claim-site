@@ -37,9 +37,9 @@ const connectors = ({ chainId }: any) => {
             chains,
             options: {
                 infuraId,
-                qrcode: true
-            }
-        })
+                qrcode: true,
+            },
+        }),
     ];
 };
 
@@ -58,11 +58,11 @@ const provider = ({ chainId, connector }: GetProviderArgs) => {
             return new ethers.providers.JsonRpcProvider(localRpcUrl);
         case "rinkeby":
             return ethers.getDefaultProvider(chain.rinkeby.id, {
-                infura: infuraId
+                infura: infuraId,
             });
         case "mainnet":
             return ethers.getDefaultProvider(chain.mainnet.id, {
-                infura: infuraId
+                infura: infuraId,
             });
         default:
             console.error("Unsupported chainName:", chainName);

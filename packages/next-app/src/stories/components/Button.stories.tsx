@@ -9,8 +9,8 @@ export default {
     component: Button,
     // More on argTypes: https://storybook.js.org/docs/react/api/argtypes
     argTypes: {
-        backgroundColor: { control: "color" }
-    }
+        backgroundColor: { control: "color" },
+    },
 } as ComponentMeta<typeof Button>;
 
 // More on component templates: https://storybook.js.org/docs/react/writing-stories/introduction#using-args
@@ -20,10 +20,10 @@ export const Primary = Template.bind({});
 // More on args: https://storybook.js.org/docs/react/writing-stories/args
 Primary.args = {
     primary: true,
-    label: "CONNECT WALLET"
+    label: "CONNECT WALLET",
 };
 
 export const Secondary = Template.bind({});
 Secondary.args = {
-    label: "LEARN MORE"
+    label: "LEARN MORE",
 };
