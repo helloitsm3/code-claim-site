@@ -64,14 +64,11 @@ export const Wallet = ({ isConnected, isUnsupported }: WalletProps) => {
           <ModalHeader>Connect your wallet</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            {connectData.connectors.map((x) => (
-              <Button
-                key={x.id}
-                onClick={() => connect(x)}
-                label={x.name}
-                buttonType={ButtonType.Connect}
-              />
-            ))}
+            <HStack spacing="24px">
+              {connectData.connectors.map((x) => (
+                <Button key={x.id} onClick={() => connect(x)} label={x.name} buttonType={ButtonType.Connect} />
+              ))}
+            </HStack>
           </ModalBody>
         </ModalContent>
       </Modal>
