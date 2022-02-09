@@ -24,7 +24,9 @@ const useContractInfo = (): ContractInfo => {
 
     const fetchContractInfo = async () => {
       const claimPeriodEndsRes = await tokenContract.claimPeriodEnds();
-      const claimPeriodEndsDate = new Date(claimPeriodEndsRes.toNumber() * 1000);
+      const claimPeriodEndsDate = new Date(
+        claimPeriodEndsRes.toNumber() * 1000
+      );
 
       const merkleRoot = await tokenContract.merkleRoot();
 

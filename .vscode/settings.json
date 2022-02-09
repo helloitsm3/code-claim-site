@@ -50,6 +50,7 @@
     "**/yarn-error.log": true,
     "**/.yalc": true
   },
+  "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true
   },
@@ -73,6 +74,5 @@
   },
   "mochaExplorer.cwd": "packages/hardhat",
   "mochaExplorer.mochaPath": "packages/hardhat/node_modules/mocha",
-  "mochaExplorer.files": "packages/hardhat/test/**/*.ts",
-  "editor.formatOnSave": true
+  "mochaExplorer.files": "packages/hardhat/test/**/*.ts"
 }
