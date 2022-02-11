@@ -6,8 +6,6 @@ import { useAccount, useNetwork } from "wagmi";
 import { ClaimCard } from "@/components/ClaimCard";
 import { Logo } from "@/components/Logo";
 import { MainBox } from "@/components/MainBox";
-import useConfirmations from "@/hooks/useConfirmations";
-import { Confirmations } from "@/components/Confirmations";
 
 const Home: NextPage = () => {
   const [{ data: networkData, error, loading }] = useNetwork();
