@@ -9,6 +9,7 @@ import { CODEToken__factory } from "@/typechain";
 import { getContractAddress, maskWalletAddress } from "@/utils";
 
 import airdropData from "../data/airdrop";
+import { addCodeToken } from "../utils/add-token";
 
 const TOKEN_DECIMALS = 18;
 
@@ -106,9 +107,30 @@ export enum ClaimCardState {
   notEligible,
 }
 
-const Avatar = () => {
-  return (
-    <Box background="gray.200" w={["96px", "120px"]} h={["96px", "120px"]} borderRadius="16px" />
+const Avatar = ({
+  imageUrl,
+  showPlaceholder,
+}: {
+  imageUrl: string | null | undefined;
+  showPlaceholder: boolean;
+}) => {
+  const shouldShowPlaceholder =
+    showPlaceholder || imageUrl === null || imageUrl === undefined;
+  return shouldShowPlaceholder ? (
+    <Box
+      background="gray.200"
+      w={["96px", "120px"]}
+      h={["96px", "120px"]}
+      borderRadius="16px"
+    />
+  ) : (
+    <Image
+      src={imageUrl}
+      alt="avatar"
+      w={["96px", "120px"]}
+      h={["96px", "120px"]}
+      borderRadius="16px"
+    />
   );
 };
 
@@ -154,7 +176,7 @@ interface HeaderData {
 
 const Header = ({ address, image, showLabel, showPlaceholder }: HeaderData) => (
   <Flex align="center">
-    <Avatar />
+    <Avatar imageUrl={image} showPlaceholder={showPlaceholder} />
     <Flex direction="column" ml={["20px", "32px"]}>
       {showLabel && (
         <Flex align="center">
@@ -204,13 +226,20 @@ const Position = ({
 
 const contractAddress = getContractAddress();
 
-export const ClaimCard = () => {
+export const ClaimCard = ({
+  setConfetti,
+}: {
+  setConfetti: CallableFunction;
+}) => {
   const [cardState, setCardState] = useState(ClaimCardState.disconnected);
 
   const [{ data: signer, error, loading }] = useSigner();
   const [{ data: accountData }] = useAccount({
     fetchEns: true,
   });
+
+  const [claimDate, setClaimDate] = useState(new Date());
+  const [blockConfirmations, setBlockConfirmations] = useState(10);
 
   const allocations =
     accountData?.address && ethers.utils.getAddress(accountData.address) in airdrop
@@ -232,6 +261,11 @@ export const ClaimCard = () => {
   if (accountData?.address) {
     formattedAddress = maskWalletAddress(accountData.address);
   }
+
+  const addCodeToMetaMask = async () => {
+    if (window.ethereum === undefined) return;
+    await addCodeToken(window.ethereum);
+  };
 
   // Effect to set initial state after account connected
   useEffect(() => {
@@ -260,7 +294,11 @@ export const ClaimCard = () => {
           const tokenContract = CODEToken__factory.connect(contractAddress, signer);
           const isClaimed = await tokenContract.isClaimed(index);
 
-          setCardState(isClaimed ? ClaimCardState.claimed : ClaimCardState.unclaimed);
+          if (isClaimed) setConfetti({ state: true });
+
+          setCardState(
+            isClaimed ? ClaimCardState.claimed : ClaimCardState.unclaimed
+          );
         }
       }
     };
@@ -289,24 +327,114 @@ export const ClaimCard = () => {
         />
       </Box>
       <Flex direction="column" mb="8">
-        <Box border="1px solid #08010D" opacity="8%" />
-        {positions.map((pos, index) => {
-          return (
-            <Box key={index} my="2">
-              <Position title={pos.title} value={pos.value.toString()} isBig={false} />
-            </Box>
-          );
-        })}
+        {cardState !== ClaimCardState.claimed && (
+          <Box border="1px solid #08010D" opacity="8%" />
+        )}
+        {cardState !== ClaimCardState.claimed &&
+          positions.map((pos, index) => {
+            return (
+              <Box key={index} my="2">
+                <Position
+                  title={pos.title}
+                  value={pos.value.toString()}
+                  isBig={false}
+                />
+              </Box>
+            );
+          })}
+
         <Box border="1px solid #08010D" opacity="8%" my="4" />
         <Box>
-          <Position title="$CODE allocation" value={totalAllocation.toString()} isBig={true} />
+          <Position
+            title="$CODE allocation"
+            value={totalAllocation.toString()}
+            isBig={true}
+          />
+          {cardState === ClaimCardState.claimed && (
+            <Box mt="16px">
+              <Text
+                px="24px"
+                fontFamily="Zen Kaku Gothic New"
+                color="#4E4853"
+                fontSize="18px"
+                fontWeight="500"
+              >
+                Claimed on{" "}
+                {claimDate.toLocaleDateString("en-UK", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </Text>
+
+              <Flex mx="24px" mt="8px">
+                <Image
+                  src="assets/block-confirmations.svg"
+                  alt="confirmations"
+                  w="24px"
+                  h="24px"
+                  alignSelf="center"
+                />
+                <Text
+                  fontFamily="IBM Plex Mono"
+                  bgGradient="linear(to-r, #AD00FF, #4E00EC)"
+                  bgClip="text"
+                  fontSize="18px"
+                  fontWeight="500"
+                  pl="8px"
+                >
+                  {blockConfirmations} block confirmations
+                </Text>
+              </Flex>
+            </Box>
+          )}
         </Box>
       </Flex>
       <Box px="24px" pb="24px">
         {cardState === ClaimCardState.disconnected ? (
           <ButtonPlaceholder />
         ) : cardState === ClaimCardState.claimed ? (
-          <ButtonPlaceholder />
+          <Box>
+            <Button
+              background="#08010D"
+              borderRadius="12px"
+              color="#FFF"
+              fontSize={["16px", "18px"]}
+              fontWeight="900"
+              w="100%"
+              h="56px"
+              mb="8px"
+              _active={{}}
+              _hover={{
+                transform:
+                  "translate3d(0px, -2px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg)",
+                transformStyle: "preserve-3d",
+              }}
+              //onClick={}
+            >
+              <Text>VIEW CLAIM TRANSACTION</Text>
+            </Button>
+
+            <Button
+              borderRadius="12px"
+              borderColor="#08010D"
+              borderWidth="2px"
+              color="#08010D"
+              fontSize={["16px", "18px"]}
+              fontWeight="900"
+              w="100%"
+              h="56px"
+              _active={{}}
+              _hover={{
+                transform:
+                  "translate3d(0px, -2px, 0px) scale3d(1, 1, 1) rotateX(0deg) rotateY(0deg) rotateZ(0deg) skew(0deg, 0deg)",
+                transformStyle: "preserve-3d",
+              }}
+              onClick={addCodeToMetaMask}
+            >
+              <Text>ADD $CODE TO METAMASK</Text>
+            </Button>
+          </Box>
         ) : (
           <ClaimButton
             label={totalAllocation.toString()}
