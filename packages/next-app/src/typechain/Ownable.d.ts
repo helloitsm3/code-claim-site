@@ -27,12 +27,24 @@ interface OwnableInterface extends ethers.utils.Interface {
   };
 
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
-  encodeFunctionData(functionFragment: "renounceOwnership", values?: undefined): string;
-  encodeFunctionData(functionFragment: "transferOwnership", values: [string]): string;
+  encodeFunctionData(
+    functionFragment: "renounceOwnership",
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
+    functionFragment: "transferOwnership",
+    values: [string],
+  ): string;
 
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "renounceOwnership", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "transferOwnership", data: BytesLike): Result;
+  decodeFunctionResult(
+    functionFragment: "renounceOwnership",
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "transferOwnership",
+    data: BytesLike,
+  ): Result;
 
   events: {
     "OwnershipTransferred(address,address)": EventFragment;
@@ -117,19 +129,28 @@ export class Ownable extends BaseContract {
 
     renounceOwnership(overrides?: CallOverrides): Promise<void>;
 
-    transferOwnership(newOwner: string, overrides?: CallOverrides): Promise<void>;
+    transferOwnership(
+      newOwner: string,
+      overrides?: CallOverrides,
+    ): Promise<void>;
   };
 
   filters: {
     "OwnershipTransferred(address,address)"(
       previousOwner?: string | null,
       newOwner?: string | null,
-    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
 
     OwnershipTransferred(
       previousOwner?: string | null,
       newOwner?: string | null,
-    ): TypedEventFilter<[string, string], { previousOwner: string; newOwner: string }>;
+    ): TypedEventFilter<
+      [string, string],
+      { previousOwner: string; newOwner: string }
+    >;
   };
 
   estimateGas: {

@@ -19,39 +19,49 @@ import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
 
-interface CODETokenInterface extends ethers.utils.Interface {
+interface CODEInterface extends ethers.utils.Interface {
   functions: {
+    "BURNER_ROLE()": FunctionFragment;
+    "DEFAULT_ADMIN_ROLE()": FunctionFragment;
     "DOMAIN_SEPARATOR()": FunctionFragment;
+    "MINTER_ROLE()": FunctionFragment;
     "allowance(address,address)": FunctionFragment;
     "approve(address,uint256)": FunctionFragment;
     "balanceOf(address)": FunctionFragment;
-    "claimPeriodEnds()": FunctionFragment;
-    "claimTokens(uint256,bytes32[])": FunctionFragment;
+    "burn(address,uint256)": FunctionFragment;
     "decimals()": FunctionFragment;
     "decreaseAllowance(address,uint256)": FunctionFragment;
-    "disableMinting()": FunctionFragment;
+    "getRoleAdmin(bytes32)": FunctionFragment;
+    "grantRole(bytes32,address)": FunctionFragment;
+    "hasRole(bytes32,address)": FunctionFragment;
     "increaseAllowance(address,uint256)": FunctionFragment;
-    "isClaimed(uint256)": FunctionFragment;
-    "merkleRoot()": FunctionFragment;
-    "mint(uint256)": FunctionFragment;
-    "mintingEnabled()": FunctionFragment;
+    "mint(address,uint256)": FunctionFragment;
     "name()": FunctionFragment;
     "nonces(address)": FunctionFragment;
-    "owner()": FunctionFragment;
     "permit(address,address,uint256,uint256,uint8,bytes32,bytes32)": FunctionFragment;
-    "renounceOwnership()": FunctionFragment;
-    "setMerkleRoot(bytes32)": FunctionFragment;
-    "sweep()": FunctionFragment;
+    "renounceRole(bytes32,address)": FunctionFragment;
+    "revokeRole(bytes32,address)": FunctionFragment;
+    "supportsInterface(bytes4)": FunctionFragment;
     "symbol()": FunctionFragment;
     "totalSupply()": FunctionFragment;
     "transfer(address,uint256)": FunctionFragment;
     "transferFrom(address,address,uint256)": FunctionFragment;
-    "transferOwnership(address)": FunctionFragment;
-    "treasury()": FunctionFragment;
   };
 
   encodeFunctionData(
+    functionFragment: "BURNER_ROLE",
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
     functionFragment: "DOMAIN_SEPARATOR",
+    values?: undefined,
+  ): string;
+  encodeFunctionData(
+    functionFragment: "MINTER_ROLE",
     values?: undefined,
   ): string;
   encodeFunctionData(
@@ -64,12 +74,8 @@ interface CODETokenInterface extends ethers.utils.Interface {
   ): string;
   encodeFunctionData(functionFragment: "balanceOf", values: [string]): string;
   encodeFunctionData(
-    functionFragment: "claimPeriodEnds",
-    values?: undefined,
-  ): string;
-  encodeFunctionData(
-    functionFragment: "claimTokens",
-    values: [BigNumberish, BytesLike[]],
+    functionFragment: "burn",
+    values: [string, BigNumberish],
   ): string;
   encodeFunctionData(functionFragment: "decimals", values?: undefined): string;
   encodeFunctionData(
@@ -77,29 +83,27 @@ interface CODETokenInterface extends ethers.utils.Interface {
     values: [string, BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "disableMinting",
-    values?: undefined,
+    functionFragment: "getRoleAdmin",
+    values: [BytesLike],
+  ): string;
+  encodeFunctionData(
+    functionFragment: "grantRole",
+    values: [BytesLike, string],
+  ): string;
+  encodeFunctionData(
+    functionFragment: "hasRole",
+    values: [BytesLike, string],
   ): string;
   encodeFunctionData(
     functionFragment: "increaseAllowance",
     values: [string, BigNumberish],
   ): string;
   encodeFunctionData(
-    functionFragment: "isClaimed",
-    values: [BigNumberish],
-  ): string;
-  encodeFunctionData(
-    functionFragment: "merkleRoot",
-    values?: undefined,
-  ): string;
-  encodeFunctionData(functionFragment: "mint", values: [BigNumberish]): string;
-  encodeFunctionData(
-    functionFragment: "mintingEnabled",
-    values?: undefined,
+    functionFragment: "mint",
+    values: [string, BigNumberish],
   ): string;
   encodeFunctionData(functionFragment: "name", values?: undefined): string;
   encodeFunctionData(functionFragment: "nonces", values: [string]): string;
-  encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "permit",
     values: [
@@ -113,14 +117,17 @@ interface CODETokenInterface extends ethers.utils.Interface {
     ],
   ): string;
   encodeFunctionData(
-    functionFragment: "renounceOwnership",
-    values?: undefined,
+    functionFragment: "renounceRole",
+    values: [BytesLike, string],
   ): string;
   encodeFunctionData(
-    functionFragment: "setMerkleRoot",
+    functionFragment: "revokeRole",
+    values: [BytesLike, string],
+  ): string;
+  encodeFunctionData(
+    functionFragment: "supportsInterface",
     values: [BytesLike],
   ): string;
-  encodeFunctionData(functionFragment: "sweep", values?: undefined): string;
   encodeFunctionData(functionFragment: "symbol", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "totalSupply",
@@ -134,60 +141,55 @@ interface CODETokenInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     values: [string, string, BigNumberish],
   ): string;
-  encodeFunctionData(
-    functionFragment: "transferOwnership",
-    values: [string],
-  ): string;
-  encodeFunctionData(functionFragment: "treasury", values?: undefined): string;
 
   decodeFunctionResult(
+    functionFragment: "BURNER_ROLE",
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "DEFAULT_ADMIN_ROLE",
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
     functionFragment: "DOMAIN_SEPARATOR",
+    data: BytesLike,
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "MINTER_ROLE",
     data: BytesLike,
   ): Result;
   decodeFunctionResult(functionFragment: "allowance", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "approve", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "balanceOf", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "claimPeriodEnds",
-    data: BytesLike,
-  ): Result;
-  decodeFunctionResult(
-    functionFragment: "claimTokens",
-    data: BytesLike,
-  ): Result;
+  decodeFunctionResult(functionFragment: "burn", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "decimals", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "decreaseAllowance",
     data: BytesLike,
   ): Result;
   decodeFunctionResult(
-    functionFragment: "disableMinting",
+    functionFragment: "getRoleAdmin",
     data: BytesLike,
   ): Result;
+  decodeFunctionResult(functionFragment: "grantRole", data: BytesLike): Result;
+  decodeFunctionResult(functionFragment: "hasRole", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "increaseAllowance",
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: "isClaimed", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "merkleRoot", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "mint", data: BytesLike): Result;
-  decodeFunctionResult(
-    functionFragment: "mintingEnabled",
-    data: BytesLike,
-  ): Result;
   decodeFunctionResult(functionFragment: "name", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "nonces", data: BytesLike): Result;
-  decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "permit", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "renounceOwnership",
+    functionFragment: "renounceRole",
     data: BytesLike,
   ): Result;
+  decodeFunctionResult(functionFragment: "revokeRole", data: BytesLike): Result;
   decodeFunctionResult(
-    functionFragment: "setMerkleRoot",
+    functionFragment: "supportsInterface",
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(functionFragment: "sweep", data: BytesLike): Result;
   decodeFunctionResult(functionFragment: "symbol", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "totalSupply",
@@ -198,24 +200,19 @@ interface CODETokenInterface extends ethers.utils.Interface {
     functionFragment: "transferFrom",
     data: BytesLike,
   ): Result;
-  decodeFunctionResult(
-    functionFragment: "transferOwnership",
-    data: BytesLike,
-  ): Result;
-  decodeFunctionResult(functionFragment: "treasury", data: BytesLike): Result;
 
   events: {
     "Approval(address,address,uint256)": EventFragment;
-    "Claim(address,uint256)": EventFragment;
-    "MerkleRootChanged(bytes32)": EventFragment;
-    "OwnershipTransferred(address,address)": EventFragment;
+    "RoleAdminChanged(bytes32,bytes32,bytes32)": EventFragment;
+    "RoleGranted(bytes32,address,address)": EventFragment;
+    "RoleRevoked(bytes32,address,address)": EventFragment;
     "Transfer(address,address,uint256)": EventFragment;
   };
 
   getEvent(nameOrSignatureOrTopic: "Approval"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "Claim"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "MerkleRootChanged"): EventFragment;
-  getEvent(nameOrSignatureOrTopic: "OwnershipTransferred"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleAdminChanged"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleGranted"): EventFragment;
+  getEvent(nameOrSignatureOrTopic: "RoleRevoked"): EventFragment;
   getEvent(nameOrSignatureOrTopic: "Transfer"): EventFragment;
 }
 
@@ -227,23 +224,27 @@ export type ApprovalEvent = TypedEvent<
   }
 >;
 
-export type ClaimEvent = TypedEvent<
-  [string, BigNumber] & { claimant: string; amount: BigNumber }
+export type RoleAdminChangedEvent = TypedEvent<
+  [string, string, string] & {
+    role: string;
+    previousAdminRole: string;
+    newAdminRole: string;
+  }
 >;
 
-export type MerkleRootChangedEvent = TypedEvent<
-  [string] & { merkleRoot: string }
+export type RoleGrantedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
 >;
 
-export type OwnershipTransferredEvent = TypedEvent<
-  [string, string] & { previousOwner: string; newOwner: string }
+export type RoleRevokedEvent = TypedEvent<
+  [string, string, string] & { role: string; account: string; sender: string }
 >;
 
 export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export class CODEToken extends BaseContract {
+export class CODE extends BaseContract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
@@ -284,10 +285,16 @@ export class CODEToken extends BaseContract {
     toBlock?: string | number | undefined,
   ): Promise<Array<TypedEvent<EventArgsArray & EventArgsObject>>>;
 
-  interface: CODETokenInterface;
+  interface: CODEInterface;
 
   functions: {
+    BURNER_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<[string]>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<[string]>;
+
+    MINTER_ROLE(overrides?: CallOverrides): Promise<[string]>;
 
     allowance(
       owner: string,
@@ -303,11 +310,9 @@ export class CODEToken extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<[BigNumber]>;
 
-    claimPeriodEnds(overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    claimTokens(
-      amount: BigNumberish,
-      merkleProof: BytesLike[],
+    burn(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
@@ -319,9 +324,19 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    disableMinting(
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<[string]>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>;
 
     increaseAllowance(
       spender: string,
@@ -329,25 +344,15 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    isClaimed(
-      index: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<[boolean]>;
-
-    merkleRoot(overrides?: CallOverrides): Promise<[string]>;
-
     mint(
-      additionalSupply: BigNumberish,
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
-
-    mintingEnabled(overrides?: CallOverrides): Promise<[boolean]>;
 
     name(overrides?: CallOverrides): Promise<[string]>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<[BigNumber]>;
-
-    owner(overrides?: CallOverrides): Promise<[string]>;
 
     permit(
       owner: string,
@@ -360,18 +365,22 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    renounceOwnership(
+    renounceRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    setMerkleRoot(
-      _merkleRoot: BytesLike,
+    revokeRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
 
-    sweep(
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<ContractTransaction>;
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides,
+    ): Promise<[boolean]>;
 
     symbol(overrides?: CallOverrides): Promise<[string]>;
 
@@ -389,16 +398,15 @@ export class CODEToken extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<ContractTransaction>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<ContractTransaction>;
-
-    treasury(overrides?: CallOverrides): Promise<[string]>;
   };
 
+  BURNER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+  DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
   DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+  MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
   allowance(
     owner: string,
@@ -414,11 +422,9 @@ export class CODEToken extends BaseContract {
 
   balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-  claimPeriodEnds(overrides?: CallOverrides): Promise<BigNumber>;
-
-  claimTokens(
-    amount: BigNumberish,
-    merkleProof: BytesLike[],
+  burn(
+    _to: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
@@ -430,9 +436,19 @@ export class CODEToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  disableMinting(
+  getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+  grantRole(
+    role: BytesLike,
+    account: string,
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
+
+  hasRole(
+    role: BytesLike,
+    account: string,
+    overrides?: CallOverrides,
+  ): Promise<boolean>;
 
   increaseAllowance(
     spender: string,
@@ -440,22 +456,15 @@ export class CODEToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  isClaimed(index: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
-
-  merkleRoot(overrides?: CallOverrides): Promise<string>;
-
   mint(
-    additionalSupply: BigNumberish,
+    _to: string,
+    _amount: BigNumberish,
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
-
-  mintingEnabled(overrides?: CallOverrides): Promise<boolean>;
 
   name(overrides?: CallOverrides): Promise<string>;
 
   nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-  owner(overrides?: CallOverrides): Promise<string>;
 
   permit(
     owner: string,
@@ -468,18 +477,22 @@ export class CODEToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  renounceOwnership(
+  renounceRole(
+    role: BytesLike,
+    account: string,
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  setMerkleRoot(
-    _merkleRoot: BytesLike,
+  revokeRole(
+    role: BytesLike,
+    account: string,
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  sweep(
-    overrides?: Overrides & { from?: string | Promise<string> },
-  ): Promise<ContractTransaction>;
+  supportsInterface(
+    interfaceId: BytesLike,
+    overrides?: CallOverrides,
+  ): Promise<boolean>;
 
   symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -498,15 +511,14 @@ export class CODEToken extends BaseContract {
     overrides?: Overrides & { from?: string | Promise<string> },
   ): Promise<ContractTransaction>;
 
-  transferOwnership(
-    newOwner: string,
-    overrides?: Overrides & { from?: string | Promise<string> },
-  ): Promise<ContractTransaction>;
-
-  treasury(overrides?: CallOverrides): Promise<string>;
-
   callStatic: {
+    BURNER_ROLE(overrides?: CallOverrides): Promise<string>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<string>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<string>;
+
+    MINTER_ROLE(overrides?: CallOverrides): Promise<string>;
 
     allowance(
       owner: string,
@@ -522,11 +534,9 @@ export class CODEToken extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    claimPeriodEnds(overrides?: CallOverrides): Promise<BigNumber>;
-
-    claimTokens(
-      amount: BigNumberish,
-      merkleProof: BytesLike[],
+    burn(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<void>;
 
@@ -538,7 +548,19 @@ export class CODEToken extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    disableMinting(overrides?: CallOverrides): Promise<void>;
+    getRoleAdmin(role: BytesLike, overrides?: CallOverrides): Promise<string>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
+    ): Promise<boolean>;
 
     increaseAllowance(
       spender: string,
@@ -546,22 +568,15 @@ export class CODEToken extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<boolean>;
 
-    isClaimed(index: BigNumberish, overrides?: CallOverrides): Promise<boolean>;
-
-    merkleRoot(overrides?: CallOverrides): Promise<string>;
-
     mint(
-      additionalSupply: BigNumberish,
+      _to: string,
+      _amount: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<void>;
-
-    mintingEnabled(overrides?: CallOverrides): Promise<boolean>;
 
     name(overrides?: CallOverrides): Promise<string>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<string>;
 
     permit(
       owner: string,
@@ -574,14 +589,22 @@ export class CODEToken extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    renounceOwnership(overrides?: CallOverrides): Promise<void>;
-
-    setMerkleRoot(
-      _merkleRoot: BytesLike,
+    renounceRole(
+      role: BytesLike,
+      account: string,
       overrides?: CallOverrides,
     ): Promise<void>;
 
-    sweep(overrides?: CallOverrides): Promise<void>;
+    revokeRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
+    ): Promise<void>;
+
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides,
+    ): Promise<boolean>;
 
     symbol(overrides?: CallOverrides): Promise<string>;
 
@@ -599,13 +622,6 @@ export class CODEToken extends BaseContract {
       amount: BigNumberish,
       overrides?: CallOverrides,
     ): Promise<boolean>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: CallOverrides,
-    ): Promise<void>;
-
-    treasury(overrides?: CallOverrides): Promise<string>;
   };
 
   filters: {
@@ -627,44 +643,58 @@ export class CODEToken extends BaseContract {
       { owner: string; spender: string; value: BigNumber }
     >;
 
-    "Claim(address,uint256)"(
-      claimant?: string | null,
-      amount?: null,
+    "RoleAdminChanged(bytes32,bytes32,bytes32)"(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null,
     ): TypedEventFilter<
-      [string, BigNumber],
-      { claimant: string; amount: BigNumber }
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
     >;
 
-    Claim(
-      claimant?: string | null,
-      amount?: null,
+    RoleAdminChanged(
+      role?: BytesLike | null,
+      previousAdminRole?: BytesLike | null,
+      newAdminRole?: BytesLike | null,
     ): TypedEventFilter<
-      [string, BigNumber],
-      { claimant: string; amount: BigNumber }
+      [string, string, string],
+      { role: string; previousAdminRole: string; newAdminRole: string }
     >;
 
-    "MerkleRootChanged(bytes32)"(
-      merkleRoot?: null,
-    ): TypedEventFilter<[string], { merkleRoot: string }>;
-
-    MerkleRootChanged(
-      merkleRoot?: null,
-    ): TypedEventFilter<[string], { merkleRoot: string }>;
-
-    "OwnershipTransferred(address,address)"(
-      previousOwner?: string | null,
-      newOwner?: string | null,
+    "RoleGranted(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
     ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
+      [string, string, string],
+      { role: string; account: string; sender: string }
     >;
 
-    OwnershipTransferred(
-      previousOwner?: string | null,
-      newOwner?: string | null,
+    RoleGranted(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
     ): TypedEventFilter<
-      [string, string],
-      { previousOwner: string; newOwner: string }
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    "RoleRevoked(bytes32,address,address)"(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
+    >;
+
+    RoleRevoked(
+      role?: BytesLike | null,
+      account?: string | null,
+      sender?: string | null,
+    ): TypedEventFilter<
+      [string, string, string],
+      { role: string; account: string; sender: string }
     >;
 
     "Transfer(address,address,uint256)"(
@@ -687,7 +717,13 @@ export class CODEToken extends BaseContract {
   };
 
   estimateGas: {
+    BURNER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
+    DEFAULT_ADMIN_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<BigNumber>;
+
+    MINTER_ROLE(overrides?: CallOverrides): Promise<BigNumber>;
 
     allowance(
       owner: string,
@@ -703,11 +739,9 @@ export class CODEToken extends BaseContract {
 
     balanceOf(account: string, overrides?: CallOverrides): Promise<BigNumber>;
 
-    claimPeriodEnds(overrides?: CallOverrides): Promise<BigNumber>;
-
-    claimTokens(
-      amount: BigNumberish,
-      merkleProof: BytesLike[],
+    burn(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
@@ -719,8 +753,21 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    disableMinting(
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides,
+    ): Promise<BigNumber>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<BigNumber>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     increaseAllowance(
@@ -729,25 +776,15 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    isClaimed(
-      index: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<BigNumber>;
-
-    merkleRoot(overrides?: CallOverrides): Promise<BigNumber>;
-
     mint(
-      additionalSupply: BigNumberish,
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
-
-    mintingEnabled(overrides?: CallOverrides): Promise<BigNumber>;
 
     name(overrides?: CallOverrides): Promise<BigNumber>;
 
     nonces(owner: string, overrides?: CallOverrides): Promise<BigNumber>;
-
-    owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     permit(
       owner: string,
@@ -760,17 +797,21 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    renounceOwnership(
+    renounceRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    setMerkleRoot(
-      _merkleRoot: BytesLike,
+    revokeRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
 
-    sweep(
-      overrides?: Overrides & { from?: string | Promise<string> },
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides,
     ): Promise<BigNumber>;
 
     symbol(overrides?: CallOverrides): Promise<BigNumber>;
@@ -789,17 +830,18 @@ export class CODEToken extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<BigNumber>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<BigNumber>;
-
-    treasury(overrides?: CallOverrides): Promise<BigNumber>;
   };
 
   populateTransaction: {
+    BURNER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    DEFAULT_ADMIN_ROLE(
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
     DOMAIN_SEPARATOR(overrides?: CallOverrides): Promise<PopulatedTransaction>;
+
+    MINTER_ROLE(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     allowance(
       owner: string,
@@ -818,11 +860,9 @@ export class CODEToken extends BaseContract {
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
-    claimPeriodEnds(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
-    claimTokens(
-      amount: BigNumberish,
-      merkleProof: BytesLike[],
+    burn(
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
@@ -834,8 +874,21 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    disableMinting(
+    getRoleAdmin(
+      role: BytesLike,
+      overrides?: CallOverrides,
+    ): Promise<PopulatedTransaction>;
+
+    grantRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
+    ): Promise<PopulatedTransaction>;
+
+    hasRole(
+      role: BytesLike,
+      account: string,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     increaseAllowance(
@@ -844,19 +897,11 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    isClaimed(
-      index: BigNumberish,
-      overrides?: CallOverrides,
-    ): Promise<PopulatedTransaction>;
-
-    merkleRoot(overrides?: CallOverrides): Promise<PopulatedTransaction>;
-
     mint(
-      additionalSupply: BigNumberish,
+      _to: string,
+      _amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
-
-    mintingEnabled(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     name(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
@@ -864,8 +909,6 @@ export class CODEToken extends BaseContract {
       owner: string,
       overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
-
-    owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     permit(
       owner: string,
@@ -878,17 +921,21 @@ export class CODEToken extends BaseContract {
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    renounceOwnership(
+    renounceRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    setMerkleRoot(
-      _merkleRoot: BytesLike,
+    revokeRole(
+      role: BytesLike,
+      account: string,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
 
-    sweep(
-      overrides?: Overrides & { from?: string | Promise<string> },
+    supportsInterface(
+      interfaceId: BytesLike,
+      overrides?: CallOverrides,
     ): Promise<PopulatedTransaction>;
 
     symbol(overrides?: CallOverrides): Promise<PopulatedTransaction>;
@@ -907,12 +954,5 @@ export class CODEToken extends BaseContract {
       amount: BigNumberish,
       overrides?: Overrides & { from?: string | Promise<string> },
     ): Promise<PopulatedTransaction>;
-
-    transferOwnership(
-      newOwner: string,
-      overrides?: Overrides & { from?: string | Promise<string> },
-    ): Promise<PopulatedTransaction>;
-
-    treasury(overrides?: CallOverrides): Promise<PopulatedTransaction>;
   };
 }
